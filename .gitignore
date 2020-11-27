@@ -1,0 +1,42 @@
+# Yarm #
+*.class
+/run
+run\
+apples.test
+
+# Package Files #
+*.war
+*.ear
+
+# IDEA Files #
+*.iml
+*.ipr
+*.iws
+/.idea
+
+# Eclipse #
+/bin
+/.settings
+/.classpath
+/eclipse
+/.project
+/.metadata
+
+# Gradle #
+/classes
+/.gradle
+/out
+/build
+/libs
+/lib
+
+MinecraftForge-Credits.txt
+README.txt
+CREDITS-fml.txt
+LICENSE-fml.txt
+
+run/*
+
+client/
+
+logs/

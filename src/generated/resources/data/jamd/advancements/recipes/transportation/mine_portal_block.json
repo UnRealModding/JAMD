@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "jamd:mine_portal_block"
+    ]
+  },
+  "criteria": {
+    "has_pick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:diamond_pickaxe"
+          }
+        ]
+      }
+    },
+    "has_obsidian": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:obsidian"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "jamd:mine_portal_block"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_pick",
+      "has_obsidian",
+      "has_the_recipe"
+    ]
+  ]
+}

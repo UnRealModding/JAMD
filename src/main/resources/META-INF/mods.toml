@@ -1,0 +1,8 @@
+modLoader="javafml"
+license="All Rights Reserved unless stated otherwise. Distrubtion permssion is given to FeedTheBeast and CurseForge for use in modpacks"
+loaderVersion="[30,)"
+[[mods]]
+    modId="jamd"
+    version="${file.jarVersion}"
+    displayName="Just Another Mining Dimension"
+    description="Mining Dimesions"
