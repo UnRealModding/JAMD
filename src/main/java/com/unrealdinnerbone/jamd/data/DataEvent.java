@@ -66,7 +66,7 @@ public class DataEvent {
 
         @Override
         protected void registerModels() {
-            itemGenerated(JAMDRegistry.MINE_PORTAL_BLOCK_ITEM.get(), new ResourceLocation(JAMD.MOD_ID, "block/mine_portal_block"));
+            cubeAll(JAMDRegistry.MINE_PORTAL_BLOCK.get().getRegistryName().getPath(),new ResourceLocation(JAMD.MOD_ID, "block/mine_portal_block"));
         }
 
         public void itemGenerated(net.minecraft.item.Item item, ResourceLocation texture) {

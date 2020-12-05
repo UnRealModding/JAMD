@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "layer0": "jamd:block/mine_portal_block"
+    "all": "jamd:block/mine_portal_block"
   }
 }
