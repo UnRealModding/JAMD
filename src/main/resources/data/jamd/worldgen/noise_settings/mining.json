@@ -19,7 +19,7 @@
     },
     "size_horizontal": 1,
     "size_vertical": 2,
-    "height": 256,
+    "height": 128,
     "sampling": {
       "xz_scale": 1,
       "y_scale": 1,
