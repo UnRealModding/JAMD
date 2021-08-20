@@ -16,6 +16,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'maven-publish'
 
 apply from: 'https://files.saps.dev/ci/git-md-changelog.gradle'
 
