@@ -28,16 +28,16 @@ public class PortalBlock extends Block {
 
 
     public PortalBlock() {
-        super(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().hardnessAndResistance(5.0F, 6.0F).sound(SoundType.STONE));
+        super(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.STONE));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult rayTraceResult) {
-        if (!world.isRemote) {
+    public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult rayTraceResult) {
+        if (!world.isClientSide()) {
             try {
                 TelerportUtils.teleport(this, playerEntity, getWorldFromTileEntity(world, blockPos).orElseThrow(() -> new RuntimeException("Invalid world ID set")), blockPos);
             } catch (Exception e) {
-                playerEntity.sendStatusMessage(new StringTextComponent(e.getMessage()), false);
+                playerEntity.displayClientMessage(new StringTextComponent(e.getMessage()), false);
             }
             return ActionResultType.PASS;
         }else {
@@ -46,44 +46,43 @@ public class PortalBlock extends Block {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if(!worldIn.isRemote()) {
-            TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if(!worldIn.isClientSide()) {
+            TileEntity tileEntity = worldIn.getBlockEntity(pos);
             if(tileEntity instanceof PortalTileEntity) {
                 PortalTileEntity portalTileEntity = (PortalTileEntity) tileEntity;
                 if(portalTileEntity.getWorldId() != null) {
-                    if(!worldIn.getDimensionKey().equals(World.OVERWORLD)) {
-                        portalTileEntity.setWorldId(World.OVERWORLD.getLocation());
+                    if(!worldIn.dimension().equals(World.OVERWORLD)) {
+                        portalTileEntity.setWorldId(World.OVERWORLD.location());
                     }else {
                         portalTileEntity.setWorldId(JAMD.DIM_ID);
                     }
-                    portalTileEntity.markDirty();
+                    portalTileEntity.setChanged();
                 }
             }
         }
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     public static void placeBlock(Block block, World world, BlockPos blockPos, RegistryKey<World> portalTo) {
-        world.setBlockState(blockPos, block.getDefaultState());
-        TileEntity tileEntity = world.getTileEntity(blockPos);
+        world.setBlockAndUpdate(blockPos, block.defaultBlockState());
+        TileEntity tileEntity = world.getBlockEntity(blockPos);
         if(tileEntity instanceof PortalTileEntity) {
-            ((PortalTileEntity) tileEntity).setWorldId(portalTo.getLocation());
-            tileEntity.markDirty();
+            ((PortalTileEntity) tileEntity).setWorldId(portalTo.location());
+            tileEntity.setChanged();
         }
     }
 
     public static Optional<World> getWorldFromTileEntity(World world, BlockPos blockPos) {
-        TileEntity tileEntity = world.getTileEntity(blockPos);
+        TileEntity tileEntity = world.getBlockEntity(blockPos);
         if (tileEntity instanceof PortalTileEntity) {
             PortalTileEntity portalTileEntity = (PortalTileEntity) tileEntity;
             if (portalTileEntity.getWorldId() != null) {
-                return Optional.ofNullable(world.getServer().getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, portalTileEntity.getWorldId())));
+                return Optional.ofNullable(world.getServer().getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, portalTileEntity.getWorldId())));
             }
         }
         return Optional.empty();
     }
-
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;

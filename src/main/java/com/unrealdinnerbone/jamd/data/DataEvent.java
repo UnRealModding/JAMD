@@ -47,7 +47,7 @@ public class DataEvent {
 
             @Override
             public void addTables() {
-                registerDropSelfLootTable(JAMDRegistry.MINE_PORTAL_BLOCK.get());
+                dropSelf(JAMDRegistry.MINE_PORTAL_BLOCK.get());
             }
 
             protected Iterable<Block> getKnownBlocks() {
@@ -95,16 +95,16 @@ public class DataEvent {
         }
 
         @Override
-        protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-            ShapedRecipeBuilder.shapedRecipe(JAMDRegistry.MINE_PORTAL_BLOCK_ITEM::get)
-                    .patternLine("OOO")
-                    .patternLine("OEO")
-                    .patternLine("OOO")
-                    .key('O', Tags.Items.OBSIDIAN)
-                    .key('E', Items.DIAMOND_PICKAXE)
-                    .addCriterion("has_pick", hasItem(Items.DIAMOND_PICKAXE))
-                    .addCriterion("has_obsidian", hasItem(Items.OBSIDIAN))
-                    .build(consumer);
+        protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
+            ShapedRecipeBuilder.shaped(JAMDRegistry.MINE_PORTAL_BLOCK_ITEM::get)
+                    .pattern("OOO")
+                    .pattern("OEO")
+                    .pattern("OOO")
+                    .define('O', Tags.Items.OBSIDIAN)
+                    .define('E', Items.DIAMOND_PICKAXE)
+                    .unlockedBy("has_pick", has(Items.DIAMOND_PICKAXE))
+                    .unlockedBy("has_obsidian", has(Items.OBSIDIAN))
+                    .save(consumer);
         }
     }
 }

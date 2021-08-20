@@ -2,124 +2,99 @@ import net.minecraftforge.gradle.common.util.ModConfig
 
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
+        maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
-        maven { url "https://dist.creeper.host/Sponge/maven" }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+
     }
 }
 
-import net.minecraftforge.gradle.common.task.SignJar
-
-
 plugins {
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'java'
+    id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 
-apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
-apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/master/version.gradle"
+apply from: 'https://files.saps.dev/ci/git-md-changelog.gradle'
 
-def theMinecraft_version = findLocalProperty("minecraft_version")
-def theForge_Version = findLocalProperty("forge_version")
-def theMappings_Version = findLocalProperty("mcp_mappings")
+def ENV = System.getenv()
 
-version = getVersionNumber()
+archivesBaseName = project.archives_base_name
+version = "${mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}+mc${minecraft_version}"
+group = 'com.unrealdinnerbone'
 
-group = 'com.unrealdinnerbone.jamd'
-archivesBaseName = 'JAMD'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: 'snapshot', version: "${theMappings_Version}"
+    mappings channel: 'official', version: project.minecraft_version
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    accessTransformer = this.getRootProject().file("src/main/resources/META-INF/accesstransformer.cfg")
     ModConfig projectMod = new ModConfig(project, project.getName());
-    projectMod.source(project.sourceSets.main)
+    projectMod.sources(project.sourceSets.main)
 
     runs {
         client {
-            workingDirectory project.file('client')
+            workingDirectory project.file('run')
             mods.add(projectMod)
         }
+
         server {
-            workingDirectory project.file('server')
+            workingDirectory project.file('run')
             mods.add(projectMod)
         }
+
         data {
             workingDirectory project.file('data')
-            args '--mod', archivesBaseName.toString().toLowerCase(), '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
             mods.add(projectMod)
         }
     }
 }
 
-if(tasks.findByName("runData") != null) {
-    build.dependsOn runData
-}
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${theMinecraft_version}-${theForge_Version}"
-}
-
-String findLocalProperty(String name) {
-    return this.getRootProject().property(name)
-}
-
-sourceSets.main.resources {
-    srcDirs 'src/generated/resources'
+    minecraft 'net.minecraftforge:forge:' + project.minecraft_version + '-' + project.forge_version
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title": "${archivesBaseName}",
-                "Specification-Vendor": "UnRealDinnerbone",
-                "Specification-Version": "${theMinecraft_version}",
-                "Implementation-Title":  "${archivesBaseName}",
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"UnRealDinnerbone",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title"     : project.mod_id,
+                "Specification-Vendor"    : "UnRealDinnerbone",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : version,
+                "Implementation-Vendor"   : "UnRealDinnerbone",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
         ])
     }
 }
 
-task signJar(type: SignJar, dependsOn: jar) {
-    if(System.getenv().get("file_name") != null) {
-        File file = new File(System.getenv().get("file_name"))
-        if (!file.exists()) {
-            new URL(System.getenv().get("url")).withInputStream { i -> file.withOutputStream { it << i } }
-        }
-        keyStore = file.path
-        alias = System.getenv().get("alias")
-        storePass = System.getenv().get("storePass")
-        keyPass = System.getenv().get("keyPass")
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-        doLast {
-            file.delete()
-        }
-    }
+jar.finalizedBy('reobfJar')
+
+task sourcesJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allJava
 }
 
-build.dependsOn signJar
+artifacts {
+    archives sourcesJar
+}
 
-curseforge {
-    if(System.getenv().unreal_curse_api_key)
-    apiKey = System.getenv().unreal_curse_api_key
-    project {
-        id = project.property("curseforge_id")
-        changelog = getGitChangelog
-        changelogType = 'markdown'
-        releaseType = project.property("type")
-        addGameVersion minecraft_version
-        addGameVersion 'Forge'
+if (ENV.CURSE_DEPLOY) {
+    curseforge {
+        apiKey = ENV.CURSE_DEPLOY
+        project {
+            id = project.curseforge_id
+            releaseType = project.release_type
+            addGameVersion "Forge"
+            addGameVersion project.minecraft_version
+            mainArtifact(jar)
+            changelog = getGitChangelog()
+            changelogType = 'markdown'
+        }
     }
 }

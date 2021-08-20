@@ -25,9 +25,9 @@ public class JAMDRegistry {
 
     public static final RegistryObject<PortalBlock> MINE_PORTAL_BLOCK = BLOCKS.register("mine_portal_block", PortalBlock::new);
 
-    public static final RegistryObject<Item> MINE_PORTAL_BLOCK_ITEM = ITEMS.register("mine_portal_block", () -> new BlockItem(MINE_PORTAL_BLOCK.get(), new Item.Properties().group(ItemGroup.TRANSPORTATION)));
+    public static final RegistryObject<Item> MINE_PORTAL_BLOCK_ITEM = ITEMS.register("mine_portal_block", () -> new BlockItem(MINE_PORTAL_BLOCK.get(), new Item.Properties().tab(ItemGroup.TAB_TRANSPORTATION)));
 
-    public static final RegistryObject<TileEntityType<PortalTileEntity>> PORTAL = TILES.register("portal", () -> TileEntityType.Builder.create(PortalTileEntity::new, MINE_PORTAL_BLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<PortalTileEntity>> PORTAL = TILES.register("portal", () -> TileEntityType.Builder.of(PortalTileEntity::new, MINE_PORTAL_BLOCK.get()).build(null));
 
 
 }

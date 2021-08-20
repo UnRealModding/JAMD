@@ -27,17 +27,17 @@ public class PortalTileEntity extends TileEntity {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putString("world_id", getTheWorldId());
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundNBT nbt) {
         if(nbt.contains("world_id")) {
-            worldId = ResourceLocation.tryCreate(nbt.getString("world_id"));
+            worldId = ResourceLocation.tryParse(nbt.getString("world_id"));
         }
-        super.read(state, nbt);
+        super.load(state, nbt);
     }
 
 
@@ -46,14 +46,14 @@ public class PortalTileEntity extends TileEntity {
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putString("world_id", getTheWorldId());
-        return new SUpdateTileEntityPacket(getPos(), 0, compoundNBT);
+        return new SUpdateTileEntityPacket(getBlockPos(), 0, compoundNBT);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getNbtCompound();
+        CompoundNBT nbt = pkt.getTag();
         if(nbt.contains("world_id")) {
-            worldId = ResourceLocation.tryCreate(nbt.getString("world_id"));
+            worldId = ResourceLocation.tryParse(nbt.getString("world_id"));
         }
 
     }

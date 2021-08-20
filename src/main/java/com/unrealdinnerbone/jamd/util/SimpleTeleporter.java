@@ -21,7 +21,7 @@ public class SimpleTeleporter implements ITeleporter
     @Override
     public Entity placeEntity(Entity entity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
         Entity repositionedEntity = repositionEntity.apply(false);
-        repositionedEntity.setPositionAndUpdate(x, y, z);
+        repositionedEntity.teleportTo(x, y, z);
         return repositionedEntity;
     }
 
