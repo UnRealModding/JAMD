@@ -28,8 +28,8 @@ jobs:
         env:
           GIT_COMMIT: ${{ github.event.after }}
           GIT_PREVIOUS_COMMIT: ${{ github.event.before }}
-          #     NANITE_DEPLOY: ${{ secrets.NANITE_DEPLOY  }}
+          NANITE_DEPLOY: ${{ secrets.NANITE_DEPLOY  }}
           CURSE_DEPLOY: ${{ secrets.CURSE_DEPLOY }}
         run: |
           chmod +x ./gradlew
-          ./gradlew build curseforge --stacktrace --no-daemon
+          ./gradlew build publish curseforge --stacktrace --no-daemon
