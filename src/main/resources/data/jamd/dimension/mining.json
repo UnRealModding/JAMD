@@ -1,12 +1,13 @@
 {
+  "type": "jamd:mining",
   "generator": {
-    "type": "minecraft:noise",
+    "seed": 286956243,
     "biome_source": {
-      "type": "minecraft:fixed",
-      "biome": "jamd:mining"
+      "biome": "jamd:mining",
+      "type": "minecraft:fixed"
     },
-    "seed": 0,
-    "settings": "jamd:mining"
-  },
-  "type": "jamd:mining"
+    "settings": "jamd:mining",
+    "type": "minecraft:noise"
+  }
+
 }

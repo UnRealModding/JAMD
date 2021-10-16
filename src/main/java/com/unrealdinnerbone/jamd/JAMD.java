@@ -1,10 +1,8 @@
 package com.unrealdinnerbone.jamd;
 
 import com.unrealdinnerbone.jamd.data.DataEvent;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -13,8 +11,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import java.util.function.Supplier;
 
 @Mod(JAMD.MOD_ID)
 public class JAMD
@@ -40,16 +36,16 @@ public class JAMD
         if (biomeLoadingEvent.getName() != null && biomeLoadingEvent.getName().toString().equals(DIM_ID.toString())) {
             biomeLoadingEvent.getGeneration().getStructures().clear();
             if(FLOWERS.get()) {
-                biomeLoadingEvent.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).clear();
+                biomeLoadingEvent.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).clear();
             }
             if(STRUCTURES.get()) {
-                biomeLoadingEvent.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).clear();
+                biomeLoadingEvent.getGeneration().getFeatures(GenerationStep.Decoration.SURFACE_STRUCTURES).clear();
             }
             if(ENTITIES.get()) {
                 biomeLoadingEvent.getSpawns().getSpawnerTypes().forEach(spawnerType -> biomeLoadingEvent.getSpawns().getSpawner(spawnerType).clear());
             }
             if(LAKES.get()) {
-                biomeLoadingEvent.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).clear();
+                biomeLoadingEvent.getGeneration().getFeatures(GenerationStep.Decoration.LAKES).clear();
             }
         }
     }

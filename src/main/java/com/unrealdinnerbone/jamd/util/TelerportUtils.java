@@ -3,13 +3,13 @@ package com.unrealdinnerbone.jamd.util;
 import com.unrealdinnerbone.jamd.JAMDRegistry;
 import com.unrealdinnerbone.jamd.block.PortalBlock;
 import com.unrealdinnerbone.jamd.block.PortalTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -18,18 +18,18 @@ import java.util.stream.Collectors;
 public class TelerportUtils {
 
 
-    public static void teleport(Block clickedBlock, PlayerEntity playerEntity, World toWorld, BlockPos blockPos) throws RuntimeException {
-        if(!toWorld.isClientSide() && playerEntity.level instanceof ServerWorld && toWorld instanceof ServerWorld) {
+    public static void teleport(Block clickedBlock, Player playerEntity, Level toWorld, BlockPos blockPos) throws RuntimeException {
+        if(!toWorld.isClientSide() && playerEntity.level instanceof ServerLevel && toWorld instanceof ServerLevel) {
             BlockPos portalLocation = findPortalLocation(toWorld, blockPos).orElseThrow(() -> new RuntimeException("Cant find location to spawn portal"));
             if (toWorld.getBlockState(portalLocation).isAir()) {
                 PortalBlock.placeBlock(clickedBlock, toWorld, portalLocation, playerEntity.level.dimension());
             }
-            playerEntity.changeDimension((ServerWorld) toWorld, new SimpleTeleporter(portalLocation.getX(), portalLocation.above().getY(), portalLocation.getZ()));
+            playerEntity.changeDimension((ServerLevel) toWorld, new SimpleTeleporter(portalLocation.getX(), portalLocation.above().getY(), portalLocation.getZ()));
         }
     }
 
 
-    private static Optional<BlockPos> findPortalLocation(World worldTo, BlockPos fromPos) {
+    private static Optional<BlockPos> findPortalLocation(Level worldTo, BlockPos fromPos) {
         if(worldTo.getBlockState(fromPos).getBlock() == JAMDRegistry.MINE_PORTAL_BLOCK.get() && isSafeSpawnLocation(worldTo, fromPos)) {
             return Optional.of(fromPos.above());
         }
@@ -42,7 +42,7 @@ public class TelerportUtils {
                 .filter(pos -> worldTo.getBlockEntity(pos) instanceof PortalTileEntity)
                 .findFirst()
                 .orElseGet(() -> {
-                    BlockPos.Mutable mutableBlockPos = new BlockPos.Mutable(0, 0, 0);
+                    BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos(0, 0, 0);
                         for (int y = 0; y < 256; y++) {
                             for (int x = fromPos.getX() - 6; x < fromPos.getX() + 6; x++) {
                                 for (int z = fromPos.getZ() - 6; z < fromPos.getZ() + 6; z++) {
@@ -60,7 +60,7 @@ public class TelerportUtils {
     }
 
 
-    private static boolean isSafeSpawnLocation(World world, BlockPos blockPos) {
+    private static boolean isSafeSpawnLocation(Level world, BlockPos blockPos) {
         return world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.above()).isAir();
     }
 

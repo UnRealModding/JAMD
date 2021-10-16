@@ -6,8 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 
@@ -26,6 +25,7 @@ archivesBaseName = project.archives_base_name
 version = "${mod_version}-build.${ENV.GITHUB_RUN_NUMBER ?: 9999}+mc${minecraft_version}"
 group = 'com.unrealdinnerbone'
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {

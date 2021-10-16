@@ -7,27 +7,46 @@
     "water_fog_color": 270131
   },
   "surface_builder": "minecraft:grass",
-  "carvers": {},
+  "carvers": {
+    "air": []
+  },
   "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
     [
-      "minecraft:ore_gravel",
-      "minecraft:ore_granite",
-      "minecraft:ore_diorite",
+      "minecraft:disk_clay",
+      "minecraft:disk_gravel",
+      "minecraft:disk_sand",
       "minecraft:ore_andesite",
       "minecraft:ore_coal",
-      "minecraft:ore_iron",
-      "minecraft:ore_gold",
-      "minecraft:ore_redstone",
+      "minecraft:ore_copper",
+      "minecraft:ore_deepslate",
       "minecraft:ore_diamond",
+      "minecraft:ore_diorite",
+      "minecraft:ore_dirt",
+      "minecraft:ore_gold",
+      "minecraft:ore_granite",
+      "minecraft:ore_gravel",
+      "minecraft:ore_iron",
       "minecraft:ore_lapis",
+      "minecraft:ore_redstone",
+      "minecraft:ore_tuff",
       "minecraft:ore_emerald"
-    ]
+    ],
+    [],
+    [],
+    []
   ],
   "starts": [],
   "spawners": {
     "monster": [],
     "creature": [],
     "ambient": [],
+    "underground_water_creature": [],
     "water_creature": [],
     "water_ambient": [],
     "misc": []
