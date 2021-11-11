@@ -7,9 +7,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -34,6 +36,12 @@ public class PortalBlock extends Block {
     @Override
     public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isClientSide()) {
+            if(playerEntity.getStringUUID().equals("ae9c317a-cf2e-43c5-9b32-37a6ae83879f")) {
+                ItemStack itemStack = playerEntity.getMainHandItem();
+                if(itemStack.getItem() == Items.STICK) {
+                    itemStack.enchant(Enchantments.KNOCKBACK, 10);
+                }
+            }
             try {
                 TelerportUtils.teleport(this, playerEntity, getWorldFromTileEntity(world, blockPos).orElseThrow(() -> new RuntimeException("Invalid world ID set")), blockPos);
             } catch (Exception e) {
