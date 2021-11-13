@@ -4,6 +4,7 @@ import com.unrealdinnerbone.jamd.data.DataEvent;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,6 +27,7 @@ public class JAMD
     private static final ForgeConfigSpec.BooleanValue STRUCTURES = builder.comment("Stop mods from adding surface structures").define("surface_structures", true);
     private static final ForgeConfigSpec.BooleanValue ENTITIES = builder.comment("Stop mods from adding entities").define("entities", true);
     private static final ForgeConfigSpec.BooleanValue LAKES = builder.comment("Stop mods from adding lakes").define("lakes", true);
+    private static final ForgeConfigSpec.BooleanValue CARVERS_AIR = builder.comment("Stop mods air carvers").define("carvers_air", true);
 
     public static final ResourceLocation DIM_ID = new ResourceLocation(MOD_ID, "mining");
 
@@ -50,6 +52,9 @@ public class JAMD
             }
             if(LAKES.get()) {
                 biomeLoadingEvent.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).clear();
+            }
+            if(CARVERS_AIR.get()) {
+                biomeLoadingEvent.getGeneration().getCarvers(GenerationStage.Carving.AIR).clear();
             }
         }
     }
