@@ -28,6 +28,8 @@ public class JAMD
     private static final ForgeConfigSpec.BooleanValue ENTITIES = builder.comment("Stop mods from adding entities").define("entities", true);
     private static final ForgeConfigSpec.BooleanValue LAKES = builder.comment("Stop mods from adding lakes").define("lakes", true);
     private static final ForgeConfigSpec.BooleanValue CARVERS_AIR = builder.comment("Stop mods air carvers").define("carvers_air", true);
+    private static final ForgeConfigSpec.BooleanValue CARVERS_LIQUID = builder.comment("Stop mods liquid carvers").define("carvers_liquid", true);
+    private static final ForgeConfigSpec.BooleanValue PLAY_TELEPORT_SOUND = builder.comment("Play teleport sound when portal is used").define("play_sound", true);
 
     public static final ResourceLocation DIM_ID = new ResourceLocation(MOD_ID, "mining");
 
@@ -56,6 +58,13 @@ public class JAMD
             if(CARVERS_AIR.get()) {
                 biomeLoadingEvent.getGeneration().getCarvers(GenerationStage.Carving.AIR).clear();
             }
+            if(CARVERS_LIQUID.get()) {
+                biomeLoadingEvent.getGeneration().getCarvers(GenerationStage.Carving.LIQUID).clear();
+            }
         }
+    }
+
+    public static boolean playTeleportSound() {
+        return PLAY_TELEPORT_SOUND.get();
     }
 }

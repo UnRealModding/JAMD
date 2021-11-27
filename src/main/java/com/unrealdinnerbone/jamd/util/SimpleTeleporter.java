@@ -1,6 +1,8 @@
 package com.unrealdinnerbone.jamd.util;
 
+import com.unrealdinnerbone.jamd.JAMD;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.ITeleporter;
 
@@ -25,4 +27,9 @@ public class SimpleTeleporter implements ITeleporter
         return repositionedEntity;
     }
 
+
+    @Override
+    public boolean playTeleportSound(ServerPlayerEntity player, ServerWorld sourceWorld, ServerWorld destWorld) {
+        return JAMD.playTeleportSound();
+    }
 }
