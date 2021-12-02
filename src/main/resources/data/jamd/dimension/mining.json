@@ -1,12 +1,36 @@
 {
+  "type": "jamd:mining",
   "generator": {
-    "type": "minecraft:noise",
-    "biome_source": {
-      "type": "minecraft:fixed",
-      "biome": "jamd:mining"
-    },
-    "seed": 0,
-    "settings": "jamd:mining"
-  },
-  "type": "jamd:mining"
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "jamd:mining",
+      "lakes": false,
+      "features": true,
+      "layers": [
+        {
+          "block": "minecraft:bedrock",
+          "height": 1
+        },
+        {
+          "block": "minecraft:deepslate",
+          "height": 64
+        },
+        {
+          "block": "minecraft:stone",
+          "height": 64
+        },
+        {
+          "block": "minecraft:dirt",
+          "height": 3
+        },
+        {
+          "block": "minecraft:grass_block",
+          "height": 1
+        }
+      ],
+      "structures": {
+        "structures": {}
+      }
+    }
+  }
 }

@@ -1,11 +1,8 @@
 package com.unrealdinnerbone.jamd;
 
 import com.unrealdinnerbone.jamd.data.DataEvent;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.carver.ConfiguredCarver;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -14,8 +11,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import java.util.function.Supplier;
 
 @Mod(JAMD.MOD_ID)
 public class JAMD
@@ -27,9 +22,6 @@ public class JAMD
     private static final ForgeConfigSpec.BooleanValue STRUCTURES = builder.comment("Stop mods from adding surface structures").define("surface_structures", true);
     private static final ForgeConfigSpec.BooleanValue ENTITIES = builder.comment("Stop mods from adding entities").define("entities", true);
     private static final ForgeConfigSpec.BooleanValue LAKES = builder.comment("Stop mods from adding lakes").define("lakes", true);
-    private static final ForgeConfigSpec.BooleanValue CARVERS_AIR = builder.comment("Stop mods air carvers").define("carvers_air", true);
-    private static final ForgeConfigSpec.BooleanValue CARVERS_LIQUID = builder.comment("Stop mods liquid carvers").define("carvers_liquid", true);
-    private static final ForgeConfigSpec.BooleanValue PLAY_TELEPORT_SOUND = builder.comment("Play teleport sound when portal is used").define("play_sound", true);
 
     public static final ResourceLocation DIM_ID = new ResourceLocation(MOD_ID, "mining");
 
@@ -42,29 +34,19 @@ public class JAMD
 
     public void onBiomesLoad(BiomeLoadingEvent biomeLoadingEvent) {
         if (biomeLoadingEvent.getName() != null && biomeLoadingEvent.getName().toString().equals(DIM_ID.toString())) {
-            biomeLoadingEvent.getGeneration().getStructures().clear();
             if(FLOWERS.get()) {
-                biomeLoadingEvent.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).clear();
+                biomeLoadingEvent.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).clear();
             }
             if(STRUCTURES.get()) {
-                biomeLoadingEvent.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).clear();
+                biomeLoadingEvent.getGeneration().getFeatures(GenerationStep.Decoration.SURFACE_STRUCTURES).clear();
+                biomeLoadingEvent.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_STRUCTURES).clear();
             }
             if(ENTITIES.get()) {
                 biomeLoadingEvent.getSpawns().getSpawnerTypes().forEach(spawnerType -> biomeLoadingEvent.getSpawns().getSpawner(spawnerType).clear());
             }
             if(LAKES.get()) {
-                biomeLoadingEvent.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).clear();
-            }
-            if(CARVERS_AIR.get()) {
-                biomeLoadingEvent.getGeneration().getCarvers(GenerationStage.Carving.AIR).clear();
-            }
-            if(CARVERS_LIQUID.get()) {
-                biomeLoadingEvent.getGeneration().getCarvers(GenerationStage.Carving.LIQUID).clear();
+                biomeLoadingEvent.getGeneration().getFeatures(GenerationStep.Decoration.LAKES).clear();
             }
         }
-    }
-
-    public static boolean playTeleportSound() {
-        return PLAY_TELEPORT_SOUND.get();
     }
 }

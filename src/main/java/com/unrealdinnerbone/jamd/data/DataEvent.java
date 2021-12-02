@@ -3,18 +3,23 @@ package com.unrealdinnerbone.jamd.data;
 import com.mojang.datafixers.util.Pair;
 import com.unrealdinnerbone.jamd.JAMD;
 import com.unrealdinnerbone.jamd.JAMDRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.data.*;
-import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootParameterSet;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeLootTableProvider;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,18 +37,18 @@ public class DataEvent {
         event.getGenerator().addProvider(new LootTable(event.getGenerator()));
     }
 
-    public static class LootTable extends ForgeLootTableProvider {
+    public static class LootTable extends LootTableProvider {
 
         public LootTable(DataGenerator gen) {
             super(gen);
         }
 
         @Override
-        protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, net.minecraft.loot.LootTable.Builder>>>, LootParameterSet>> getTables() {
-            return Collections.singletonList(Pair.of(BlockLootTable::new, LootParameterSets.BLOCK));
+        protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, net.minecraft.world.level.storage.loot.LootTable.Builder>>>, LootContextParamSet>> getTables() {
+            return Collections.singletonList(Pair.of(BlockLootTable::new, LootContextParamSets.BLOCK));
         }
 
-        public static class BlockLootTable extends BlockLootTables {
+        public static class BlockLootTable extends BlockLoot {
 
             @Override
             public void addTables() {
@@ -69,7 +74,7 @@ public class DataEvent {
             cubeAll(JAMDRegistry.MINE_PORTAL_BLOCK.get().getRegistryName().getPath(),new ResourceLocation(JAMD.MOD_ID, "block/mine_portal_block"));
         }
 
-        public void itemGenerated(net.minecraft.item.Item item, ResourceLocation texture) {
+        public void itemGenerated(net.minecraft.world.item.Item item, ResourceLocation texture) {
             getBuilder(item.getRegistryName().getPath()).parent(getExistingFile(mcLoc("item/generated")))
                     .texture("layer0", texture);
         }
@@ -90,12 +95,13 @@ public class DataEvent {
 
     public static class Recipe extends RecipeProvider {
 
-        public Recipe(DataGenerator generatorIn) {
+        Recipe(DataGenerator generatorIn) {
             super(generatorIn);
         }
 
+
         @Override
-        protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
+        protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
             ShapedRecipeBuilder.shaped(JAMDRegistry.MINE_PORTAL_BLOCK_ITEM::get)
                     .pattern("OOO")
                     .pattern("OEO")
@@ -106,5 +112,6 @@ public class DataEvent {
                     .unlockedBy("has_obsidian", has(Items.OBSIDIAN))
                     .save(consumer);
         }
+
     }
 }

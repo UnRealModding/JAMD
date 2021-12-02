@@ -1,16 +1,17 @@
 {
-  "name": "jamd:mining",
   "ultrawarm": false,
-  "natural": false,
-  "coordinate_scale": 1,
-  "has_skylight": false,
-  "has_ceiling": false,
-  "ambient_light": 1.0,
-  "fixed_time": 6000,
-  "piglin_safe": true,
-  "bed_works": true,
+  "natural": true,
+  "piglin_safe": false,
   "respawn_anchor_works": false,
+  "bed_works": true,
   "has_raids": true,
+  "has_skylight": true,
+  "has_ceiling": false,
+  "coordinate_scale": 1,
+  "ambient_light": 1,
+  "fixed_time": 6000,
   "logical_height": 256,
-  "infiniburn": "minecraft:infiniburn_overworld"
+  "infiniburn": "minecraft:infiniburn_overworld",
+  "min_y": -64,
+  "height": 256
 }
