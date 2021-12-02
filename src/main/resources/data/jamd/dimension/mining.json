@@ -1,7 +1,7 @@
 {
   "type": "jamd:mining",
   "generator": {
-    "type": "minecraft:flat",
+    "type": "jamd:mining",
     "settings": {
       "biome": "jamd:mining",
       "lakes": false,

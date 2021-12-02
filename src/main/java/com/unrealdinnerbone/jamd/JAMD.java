@@ -1,8 +1,11 @@
 package com.unrealdinnerbone.jamd;
 
 import com.unrealdinnerbone.jamd.data.DataEvent;
+import com.unrealdinnerbone.jamd.world.CustomFlatLevelSource;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -26,6 +29,8 @@ public class JAMD
     public static final ResourceLocation DIM_ID = new ResourceLocation(MOD_ID, "mining");
 
     public JAMD() {
+        Registry.register(Registry.CHUNK_GENERATOR, DIM_ID, CustomFlatLevelSource.CODEC);
+
         JAMDRegistry.REGISTRIES.forEach(deferredRegister -> deferredRegister.register(FMLJavaModLoadingContext.get().getModEventBus()));
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, builder.build());
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::onBiomesLoad);
