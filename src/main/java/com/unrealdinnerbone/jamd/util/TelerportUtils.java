@@ -43,7 +43,7 @@ public class TelerportUtils {
                 .findFirst()
                 .orElseGet(() -> {
                     BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos(0, 0, 0);
-                        for (int y = 0; y < 256; y++) {
+                        for (int y = worldTo.getMinBuildHeight(); y < worldTo.getMaxBuildHeight(); y++) {
                             for (int x = fromPos.getX() - 6; x < fromPos.getX() + 6; x++) {
                                 for (int z = fromPos.getZ() - 6; z < fromPos.getZ() + 6; z++) {
                                     mutableBlockPos.set(x, y, z);
