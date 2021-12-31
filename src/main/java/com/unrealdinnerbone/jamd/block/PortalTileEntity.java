@@ -21,16 +21,11 @@ public class PortalTileEntity extends BlockEntity {
 
     public void setWorldId(ResourceLocation worldId) {
         this.worldId = worldId;
+        setChanged();
     }
 
     public ResourceLocation getWorldId() {
         return worldId == null ? new ResourceLocation("minecraft", "empty") : worldId;
-    }
-
-    @Override
-    public CompoundTag save(CompoundTag tag) {
-        tag.putString("world_id", getTheWorldId());
-        return super.save(tag);
     }
 
     @Override
@@ -41,37 +36,35 @@ public class PortalTileEntity extends BlockEntity {
         super.load(tag);
     }
 
-
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        tag.putString("world_id", getTheWorldId());
+    }
 
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        CompoundTag compoundNBT = new CompoundTag();
-        compoundNBT.putString("world_id", getTheWorldId());
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        CompoundTag nbt = pkt.getTag();
-        if(nbt.contains("world_id")) {
-            worldId = ResourceLocation.tryParse(nbt.getString("world_id"));
-        }
+        load(pkt.getTag());
     }
 
 
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        load(tag);
+    }
 
     public String getTheWorldId() {
         return worldId == null ? "" : worldId.toString();
     }
 
-
-
     @Override
     public CompoundTag getUpdateTag() {
-        CompoundTag compoundNBT = new CompoundTag();
-        compoundNBT.putString("world_id", getTheWorldId());
-        return compoundNBT;
+        return save(new CompoundTag());
     }
 
 }
