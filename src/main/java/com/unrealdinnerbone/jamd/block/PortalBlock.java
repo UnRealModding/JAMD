@@ -80,6 +80,7 @@ public class PortalBlock extends Block implements EntityBlock {
         return Optional.empty();
     }
 
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
