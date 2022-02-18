@@ -9,10 +9,13 @@ import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -23,6 +26,7 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -35,6 +39,20 @@ public class DataEvent {
         event.getGenerator().addProvider(new BlockState(event.getGenerator(), event.getExistingFileHelper()));
         event.getGenerator().addProvider(new Item(event.getGenerator(), event.getExistingFileHelper()));
         event.getGenerator().addProvider(new LootTable(event.getGenerator()));
+        event.getGenerator().addProvider(new Tag(event.getGenerator(), event.getExistingFileHelper()));
+    }
+
+    public static class Tag extends BlockTagsProvider {
+
+        public Tag(DataGenerator dataGenerator, ExistingFileHelper fileHelper) {
+            super(dataGenerator, JAMD.MOD_ID, fileHelper);
+        }
+
+        @Override
+        protected void addTags() {
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(JAMDRegistry.MINE_PORTAL_BLOCK.get());
+            tag(BlockTags.NEEDS_DIAMOND_TOOL).add(JAMDRegistry.MINE_PORTAL_BLOCK.get());
+        }
     }
 
     public static class LootTable extends LootTableProvider {
@@ -59,6 +77,11 @@ public class DataEvent {
                 return Collections.singleton(JAMDRegistry.MINE_PORTAL_BLOCK.get());
             }
 
+
+        }
+
+        @Override
+        protected void validate(Map<ResourceLocation, net.minecraft.world.level.storage.loot.LootTable> map, ValidationContext validationtracker) {
 
         }
     }

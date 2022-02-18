@@ -13,60 +13,8 @@ import javax.annotation.Nullable;
 
 public class PortalTileEntity extends BlockEntity {
 
-    private ResourceLocation worldId;
-
     public PortalTileEntity(BlockPos blockPos, BlockState blockState) {
         super(JAMDRegistry.PORTAL.get(), blockPos, blockState);
-    }
-
-    public void setWorldId(ResourceLocation worldId) {
-        this.worldId = worldId;
-        setChanged();
-    }
-
-    public ResourceLocation getWorldId() {
-        return worldId == null ? new ResourceLocation("minecraft", "empty") : worldId;
-    }
-
-    @Override
-    public void load(CompoundTag tag) {
-        if(tag.contains("world_id")) {
-            worldId = ResourceLocation.tryParse(tag.getString("world_id"));
-        }
-        super.load(tag);
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag) {
-        tag.putString("world_id", getTheWorldId());
-    }
-
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        load(pkt.getTag());
-    }
-
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        load(tag);
-    }
-
-    public String getTheWorldId() {
-        return worldId == null ? "" : worldId.toString();
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
-        return tag;
     }
 
 }

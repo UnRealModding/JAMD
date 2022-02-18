@@ -1,5 +1,6 @@
 package com.unrealdinnerbone.jamd.util;
 
+import com.unrealdinnerbone.jamd.JAMD;
 import com.unrealdinnerbone.jamd.JAMDRegistry;
 import com.unrealdinnerbone.jamd.block.PortalBlock;
 import com.unrealdinnerbone.jamd.block.PortalTileEntity;
@@ -22,7 +23,7 @@ public class TelerportUtils {
         if(!toWorld.isClientSide() && playerEntity.level instanceof ServerLevel && toWorld instanceof ServerLevel) {
             BlockPos portalLocation = findPortalLocation(toWorld, blockPos).orElseThrow(() -> new RuntimeException("Cant find location to spawn portal"));
             if (toWorld.getBlockState(portalLocation).isAir()) {
-                PortalBlock.placeBlock(clickedBlock, toWorld, portalLocation, playerEntity.level.dimension());
+                toWorld.setBlockAndUpdate(portalLocation, JAMDRegistry.MINE_PORTAL_BLOCK.get().defaultBlockState());
             }
             playerEntity.changeDimension((ServerLevel) toWorld, new SimpleTeleporter(portalLocation.getX(), portalLocation.above().getY(), portalLocation.getZ()));
         }

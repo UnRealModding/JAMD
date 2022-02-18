@@ -3,9 +3,11 @@ package com.unrealdinnerbone.jamd;
 import com.unrealdinnerbone.jamd.data.DataEvent;
 import com.unrealdinnerbone.jamd.world.CustomFlatLevelSource;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -14,6 +16,8 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.Optional;
 
 @Mod(JAMD.MOD_ID)
 public class JAMD
@@ -25,6 +29,7 @@ public class JAMD
     private static final ForgeConfigSpec.BooleanValue STRUCTURES = builder.comment("Stop mods from adding surface structures").define("surface_structures", true);
     private static final ForgeConfigSpec.BooleanValue ENTITIES = builder.comment("Stop mods from adding entities").define("entities", true);
     private static final ForgeConfigSpec.BooleanValue LAKES = builder.comment("Stop mods from adding lakes").define("lakes", true);
+    private static final ForgeConfigSpec.ConfigValue<String> MAIN_WORLD = builder.comment("Main world id").define("main_world", "minecraft:overworld");
 
     public static final ResourceLocation DIM_ID = new ResourceLocation(MOD_ID, "mining");
 
@@ -53,5 +58,17 @@ public class JAMD
                 biomeLoadingEvent.getGeneration().getFeatures(GenerationStep.Decoration.LAKES).clear();
             }
         }
+    }
+
+    public static String getMainWorld() {
+        return MAIN_WORLD.get();
+    }
+
+    public static Optional<Level> getMainWorld(MinecraftServer server) {
+        return Optional.ofNullable(server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(MAIN_WORLD.get()))));
+    }
+
+    public static Optional<Level> getMining(MinecraftServer server) {
+        return Optional.ofNullable(server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, DIM_ID)));
     }
 }
