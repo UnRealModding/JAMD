@@ -1,15 +1,19 @@
 package com.unrealdinnerbone.jamd;
 
+import com.mojang.serialization.Codec;
 import com.unrealdinnerbone.jamd.data.DataEvent;
 import com.unrealdinnerbone.jamd.world.CustomFlatLevelSource;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -34,12 +38,15 @@ public class JAMD
     public static final ResourceLocation DIM_ID = new ResourceLocation(MOD_ID, "mining");
 
     public JAMD() {
-        Registry.register(Registry.CHUNK_GENERATOR, DIM_ID, CustomFlatLevelSource.CODEC);
-
         JAMDRegistry.REGISTRIES.forEach(deferredRegister -> deferredRegister.register(FMLJavaModLoadingContext.get().getModEventBus()));
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, builder.build());
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::onBiomesLoad);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(DataEvent::onData);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, JAMD::onRegister);
+    }
+
+    public static void onRegister(RegistryEvent.Register<Item> event) {
+        Registry.register(Registry.CHUNK_GENERATOR, DIM_ID, CustomFlatLevelSource.CODEC);
     }
 
     public void onBiomesLoad(BiomeLoadingEvent biomeLoadingEvent) {
