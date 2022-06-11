@@ -3,6 +3,7 @@ package com.unrealdinnerbone.jamd.data;
 import com.mojang.datafixers.util.Pair;
 import com.unrealdinnerbone.jamd.JAMD;
 import com.unrealdinnerbone.jamd.JAMDRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.loot.LootTableProvider;
@@ -13,16 +14,17 @@ import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeLootTableProvider;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,11 +37,13 @@ import java.util.function.Supplier;
 public class DataEvent {
 
     public static void onData(GatherDataEvent event) {
-        event.getGenerator().addProvider(new Recipe(event.getGenerator()));
-        event.getGenerator().addProvider(new BlockState(event.getGenerator(), event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new Item(event.getGenerator(), event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new LootTable(event.getGenerator()));
-        event.getGenerator().addProvider(new Tag(event.getGenerator(), event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new Recipe(event.getGenerator()));
+        event.getGenerator().addProvider(true, new BlockState(event.getGenerator(), event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new Item(event.getGenerator(), event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new LootTable(event.getGenerator()));
+        event.getGenerator().addProvider(true, new Tag(event.getGenerator(), event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new CodecTypedGenerator<>(event.getGenerator(), JAMD.MOD_ID, ForgeRegistries.Keys.BIOMES, Biome.DIRECT_CODEC));
+        event.getGenerator().addProvider(true, new CodecTypedGenerator<>(event.getGenerator(), JAMD.MOD_ID, Registry.DIMENSION_TYPE_REGISTRY, DimensionType.DIRECT_CODEC));
     }
 
     public static class Tag extends BlockTagsProvider {
@@ -94,11 +98,13 @@ public class DataEvent {
 
         @Override
         protected void registerModels() {
-            cubeAll(JAMDRegistry.MINE_PORTAL_BLOCK.get().getRegistryName().getPath(),new ResourceLocation(JAMD.MOD_ID, "block/mine_portal_block"));
+            ResourceLocation id = ForgeRegistries.BLOCKS.getKey(JAMDRegistry.MINE_PORTAL_BLOCK.get());
+            cubeAll(id.getPath(),new ResourceLocation(JAMD.MOD_ID, "block/mine_portal_block"));
         }
 
         public void itemGenerated(net.minecraft.world.item.Item item, ResourceLocation texture) {
-            getBuilder(item.getRegistryName().getPath()).parent(getExistingFile(mcLoc("item/generated")))
+            ResourceLocation id = ForgeRegistries.ITEMS.getKey(item);
+            getBuilder(id.getPath()).parent(getExistingFile(mcLoc("item/generated")))
                     .texture("layer0", texture);
         }
 

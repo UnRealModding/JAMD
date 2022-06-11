@@ -10,9 +10,12 @@ import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 public class CustomFlatLevelSource extends FlatLevelSource {
 
-    public static final Codec<CustomFlatLevelSource> CODEC = RecordCodecBuilder.create((instance) -> commonCodec(instance).and(FlatLevelGeneratorSettings.CODEC.fieldOf("settings").forGetter(CustomFlatLevelSource::settings)).apply(instance, instance.stable(CustomFlatLevelSource::new)));
-
-
+    public static final Codec<CustomFlatLevelSource> CODEC = RecordCodecBuilder.create((instance) ->
+            commonCodec(instance).and(
+                    FlatLevelGeneratorSettings.CODEC
+                            .fieldOf("settings")
+                            .forGetter(CustomFlatLevelSource::settings))
+                    .apply(instance, instance.stable(CustomFlatLevelSource::new)));
     public CustomFlatLevelSource(Registry<StructureSet> registry, FlatLevelGeneratorSettings settings) {
         super(registry, settings);
     }

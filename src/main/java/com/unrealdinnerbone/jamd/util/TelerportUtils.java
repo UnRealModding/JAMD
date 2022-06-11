@@ -25,7 +25,7 @@ public class TelerportUtils {
             if (toWorld.getBlockState(portalLocation).isAir()) {
                 toWorld.setBlockAndUpdate(portalLocation, JAMDRegistry.MINE_PORTAL_BLOCK.get().defaultBlockState());
             }
-            playerEntity.changeDimension((ServerLevel) toWorld, new SimpleTeleporter(portalLocation.getX(), portalLocation.above().getY(), portalLocation.getZ()));
+            playerEntity.changeDimension((ServerLevel) toWorld, SimpleTeleporter.createBasic(portalLocation.getX(), portalLocation.above().getY(), portalLocation.getZ()));
         }
     }
 

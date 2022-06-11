@@ -4,14 +4,10 @@ import com.unrealdinnerbone.jamd.JAMD;
 import com.unrealdinnerbone.jamd.JAMDRegistry;
 import com.unrealdinnerbone.jamd.util.TelerportUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -20,10 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class PortalBlock extends Block implements EntityBlock {
 
@@ -42,7 +36,7 @@ public class PortalBlock extends Block implements EntityBlock {
                     TelerportUtils.teleport(this, player, JAMD.getMining(level.getServer()).orElseThrow(() -> new RuntimeException("Error getting mining dimension")), pos);
                 }
             } catch (Exception e) {
-                player.displayClientMessage(new TextComponent(e.getMessage()), false);
+                player.displayClientMessage(Component.literal(e.getMessage()), false);
             }
             return InteractionResult.PASS;
         }else {

@@ -7,16 +7,9 @@ import net.minecraftforge.common.util.ITeleporter;
 import java.util.function.Function;
 
 
-public class SimpleTeleporter implements ITeleporter
-{
-    private final double x;
-    private final double y;
-    private final double z;
-
-    public SimpleTeleporter(double x, double y, double z) {
-        this.x = x + 0.5;
-        this.y = y + 0.5;
-        this.z = z + 0.5;
+public record SimpleTeleporter(double x, double y, double z) implements ITeleporter {
+    public static SimpleTeleporter createBasic(double x, double y, double z) {
+        return new SimpleTeleporter(x + 0.5, y + 0.5, z + 0.5);
     }
 
     @Override
@@ -25,5 +18,4 @@ public class SimpleTeleporter implements ITeleporter
         repositionedEntity.teleportTo(x, y, z);
         return repositionedEntity;
     }
-
 }

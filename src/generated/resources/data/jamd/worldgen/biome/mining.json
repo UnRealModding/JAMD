@@ -1,18 +1,12 @@
 {
-  "temperature": 1,
+  "carvers": {},
   "downfall": 0.4,
-  "precipitation": "none",
-  "temperature_modifier": "none",
-  "category": "plains",
   "effects": {
-    "sky_color": 8103167,
     "fog_color": 12638463,
+    "sky_color": 8103167,
     "water_color": 4445678,
     "water_fog_color": 270131
   },
-  "spawners": {},
-  "spawn_costs": {},
-  "carvers": {},
   "features": [
     [],
     [],
@@ -23,7 +17,6 @@
     [],
     [],
     [
-      "minecraft:ore_tuff",
       "minecraft:ore_coal_upper",
       "minecraft:ore_coal_lower",
       "minecraft:ore_iron_upper",
@@ -38,11 +31,23 @@
       "minecraft:ore_diamond_buried",
       "minecraft:ore_lapis",
       "minecraft:ore_lapis_buried",
-      "minecraft:ore_copper"
-    ],
-    [],
-    [],
-    [],
-    []
-  ]
+      "minecraft:ore_copper",
+      "minecraft:underwater_magma",
+      "minecraft:ore_emerald",
+      "minecraft:ore_tuff"
+    ]
+  ],
+  "precipitation": "none",
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 1.0
 }
